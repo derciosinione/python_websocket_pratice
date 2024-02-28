@@ -18,17 +18,18 @@ async def handler(websocket):
                 data = json.loads(message)
                 action = data.get("action")
                 
-                if(action=="connect"):
-                    await handle_connect(websocket)
-                if(action=="start"):
-                    await handle_start(data,websocket)
-                if(action=="join"):
-                    await handle_join(data, websocket)
-                if(action=="play"):
-                    await handle_change_message(data, websocket)
+                match action:
+                    case "connect":        
+                        await handle_connect(websocket)
+                    case "start":
+                        await handle_start(data, websocket)
+                    case "join":
+                        await handle_join(data, websocket)
+                    case "play":
+                        await handle_change_message(data, websocket)
                 
         except websockets.ConnectionClosedOK:
-            break
+           connected.discard(websocket)
 
 
 async def handle_connect(websocket):
